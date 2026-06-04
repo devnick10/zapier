@@ -16,30 +16,30 @@ model User {
 }
 
 model Zap {
-  id             String         @id @default(uuid())
-  triggerId      String
-  trigger        Trigger?
-  action         Action[]
-  userId         String
-  user           User           @relation(fields: [userId], references: [id])
-  zapRun         ZapRun[]
-  zapRunOutboxes ZapRunOutbox[]
+  id        String   @id @default(uuid())
+  triggerId String
+  trigger   Trigger?
+  action    Action[]
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  zapRun    ZapRun[]
 }
 
 model Trigger {
   id                 String           @id @default(uuid())
   zapId              String           @unique
-  availabletriggerId String
-  type               AvailableTrigger @relation(fields: [availabletriggerId], references: [id])
+  availableTriggerId String
+  type               AvailableTrigger @relation(fields: [availableTriggerId], references: [id])
   zap                Zap              @relation(fields: [zapId], references: [id])
+  sortingOrder       Int              @default(0)
 }
 
 model Action {
-  id       String          @id @default(uuid())
-  zapId    String
-  actionId String
-  zap      Zap             @relation(fields: [zapId], references: [id])
-  type     AvailableAction @relation(fields: [actionId], references: [id])
+  id                String          @id @default(uuid())
+  zapId             String
+  availableActionId String
+  zap               Zap             @relation(fields: [zapId], references: [id])
+  type              AvailableAction @relation(fields: [availableActionId], references: [id])
 }
 
 model AvailableTrigger {
@@ -66,9 +66,7 @@ model ZapRun {
 model ZapRunOutbox {
   id        String   @id @default(uuid())
   // No need to store zapId casue zapRun allready have it . 
-  zapId     String
   zapRunId  String   @unique
-  zap       Zap      @relation(fields: [zapId], references: [id])
   zaprun    ZapRun   @relation(fields: [zapRunId], references: [id])
   createdAt DateTime @default(now())
 }

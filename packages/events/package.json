@@ -1,17 +1,16 @@
 {
-  "name": "processor",
+  "name": "@repo/events",
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "types": "./index.ts",
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
-  },
-  "dependencies": {
-    "kafkajs": "^2.2.4",
-    "@repo/db": "workspace:*",
-    "@repo/events": "workspace:*"
   }
 }

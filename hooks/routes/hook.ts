@@ -14,7 +14,7 @@ router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
         })
         return
     }
-    if (!body.success) {
+    if (req.body.metadata && !body.success) {
         res.status(411).json({
             message: body.error
         })
@@ -22,6 +22,7 @@ router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     }
 
     const { zapId } = params.data
+    // @ts-ignore
     const { metadata } = body.data
 
     // store in db a new triger 
@@ -33,9 +34,8 @@ router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
                 metadata
             }
         })
-        txn.zapRunOutbox.create({
+        await txn.zapRunOutbox.create({
             data: {
-                zapId,
                 zapRunId: zapRun.id
             }
         })

@@ -5,5 +5,5 @@ export const HookSchema = z.object({
     zapId: z.string()
 })
 export const HookBodySchema = z.object({
-    metadata: z.json()
+    metadata: z.any().optional()
 });
