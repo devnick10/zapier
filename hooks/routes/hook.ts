@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { client } from "../config/db";
-import { HookBodySchema, HookSchema } from "../zodSchema";
+import { client } from "@repo/db";
+import { HookBodySchema, HookSchema } from "../lib/zodSchema";
 
 const router = Router()
 
@@ -29,6 +29,7 @@ router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
         const zapRun = await txn.zapRun.create({
             data: {
                 zapId,
+                //@ts-ignore
                 metadata
             }
         })

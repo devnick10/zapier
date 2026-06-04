@@ -1,6 +1,5 @@
 import z from "zod";
 
-
 export const HookSchema = z.object({
     userId: z.string(),
     zapId: z.string()
