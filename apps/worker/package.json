@@ -1,12 +1,13 @@
 {
-  "name": "zapier",
+  "name": "worker",
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "@repo/db": "workspace:*",
+    "@repo/events": "workspace:*"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
