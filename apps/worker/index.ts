@@ -16,24 +16,24 @@ async function main() {
         fromBeginning: true,
     })
 
-    while (true) {
-        await consumer.run({
-            autoCommit: false,
-            eachMessage: async ({ partition, message }) => {
-                console.log({
-                    partition,
-                    offset: message.offset,
-                    value: message.value?.toString()
-                })
+    await consumer.run({
+        autoCommit: false,
+        eachMessage: async ({ partition, message }) => {
+            console.log({
+                partition,
+                offset: message.offset,
+                value: message.value?.toString()
+            })
 
-                await consumer.commitOffsets([{
-                    topic: Topic.TOPIC_NAME,
-                    partition,
-                    offset: (parseInt(message.offset) + 1).toString()
-                }])
-            }
-        })
-    }
+            await new Promise(r => setTimeout(r, 3000));
+
+            await consumer.commitOffsets([{
+                topic: Topic.TOPIC_NAME,
+                partition,
+                offset: (parseInt(message.offset) + 1).toString()
+            }])
+        }
+    })
 }
 
 main().catch(console.error)
