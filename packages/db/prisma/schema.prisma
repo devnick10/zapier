@@ -23,6 +23,7 @@ model Zap {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   zapRun    ZapRun[]
+  createdAt DateTime @default(now())
 }
 
 model Trigger {
@@ -39,7 +40,7 @@ model Action {
   availableActionId String
   zap               Zap             @relation(fields: [zapId], references: [id])
   type              AvailableAction @relation(fields: [availableActionId], references: [id])
-  sortingOrder       Int              @default(0)
+  sortingOrder      Int             @default(0)
 }
 
 model AvailableTrigger {
