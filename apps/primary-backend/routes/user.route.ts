@@ -79,11 +79,11 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
         where: { id: userId }
     })
 
-    if (!userId) {
+    if (!user) {
         res.status(404).json({ message: "User not found!" })
         return;
     }
-    res.json({ message: "User fetched", user: { email: user?.email } })
+    res.json({ message: "User fetched", user: { email: user?.email, name: user.name } })
 })
 
 
