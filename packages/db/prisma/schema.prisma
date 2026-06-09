@@ -47,12 +47,14 @@ model AvailableTrigger {
   id      String    @id @default(uuid())
   name    String
   trigger Trigger[]
+  image   String
 }
 
 model AvailableAction {
   id     String   @id @default(uuid())
   name   String
   action Action[]
+  image  String 
 }
 
 model ZapRun {

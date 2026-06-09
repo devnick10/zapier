@@ -3,11 +3,7 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { ZapIdSchema, ZapSchema } from "../lib/schema";
 import { authMiddleware } from "../middlewares/auth.Middleware";
-/**
- * TODO
- * /triggers endpoint return all available triggers
- * /actions endpoint return all available actions
- */
+
 const router = Router();
 router.use(authMiddleware)
 

@@ -1,10 +1,12 @@
-import "dotenv/config"
+import cors from "cors";
+import "dotenv/config";
 import express from "express";
-import morgan from "morgan"
-import { zapRouter } from "./routes/zap.router";
-import { userRouter } from "./routes/user.route";
 import helmet from "helmet";
-import cors from "cors"
+import morgan from "morgan";
+import { actionRouter } from "./routes/actions.route";
+import { triggerRouter } from "./routes/trigger.route";
+import { userRouter } from "./routes/user.route";
+import { zapRouter } from "./routes/zap.router";
 // import { globalErrorHandler } from "./middlewares/error.middleware";
 
 const app = express();
@@ -23,6 +25,8 @@ app.use(helmet())
 //  Routes
 app.use("/api/v1/zap", zapRouter)
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/trigger", triggerRouter)
+app.use("/api/v1/action", actionRouter)
 
 
 // app.use(globalErrorHandler)
