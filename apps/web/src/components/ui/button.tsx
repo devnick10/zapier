@@ -11,6 +11,7 @@ const buttonVariants = cva(
           "bg-background  hover:bg-neutral-100 dark:hover:bg-neutral-800",
         secondary:
           "bg-orange-600 text-white hover:bg-orange-700",
+        purple:"bg-purple-600 text-white hover:bg-purple-700"
       },
       size: {
         sm: "h-8 px-3",

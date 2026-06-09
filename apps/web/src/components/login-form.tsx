@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { api } from "@/lib/axios"
 import { Spinner } from "./ui/sipinner"
 import { useRouter } from "next/navigation"
+import { useUserStore } from "@/stores/store-provider"
 
 type LoginCredentials = Omit<User, "name">
 
@@ -18,6 +19,7 @@ export const LoginForm: React.FC = () => {
         password: ""
     })
     const router = useRouter()
+    const { login } = useUserStore(state => state)
 
     async function submit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -31,11 +33,12 @@ export const LoginForm: React.FC = () => {
             const response = await api.post("/user/signin", user)
             if (!response.data.token) {
                 toast.error("Something went wrong")
-                return;
-            } else if (response.status === 201) {
+
+            } else if (response.status === 200) {
                 toast.success("Signup successfully.")
                 localStorage.setItem("token", String(response.data.token))
-                // router.push("/dashboard")
+                login();
+                router.push("/dashboard")
             }
         } catch (error) {
             console.log(error)

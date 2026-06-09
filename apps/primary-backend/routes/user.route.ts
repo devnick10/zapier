@@ -70,7 +70,7 @@ router.post("/signin", async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ userId: user.id }, JWT_PASSWORD)
-    res.status(201).json({ message: "Signin successfully", token })
+    res.status(200).json({ message: "Signin successfully", token })
 })
 
 router.get("/", authMiddleware, async (req: Request, res: Response) => {

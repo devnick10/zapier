@@ -9,6 +9,7 @@ import axios from "axios"
 import { api } from "@/lib/axios"
 import { Spinner } from "./ui/sipinner"
 import { useRouter } from "next/navigation"
+import { useUserStore } from "@/stores/store-provider"
 
 export const SignupForm: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false)
@@ -17,6 +18,7 @@ export const SignupForm: React.FC = () => {
         email: "",
         password: ""
     })
+    const { login } = useUserStore(state => state)
     const router = useRouter()
 
     async function submit(e: FormEvent<HTMLFormElement>) {
@@ -35,6 +37,7 @@ export const SignupForm: React.FC = () => {
             } else if (response.status === 201) {
                 toast.success("Signup successfully.")
                 localStorage.setItem("token", String(response.data.token))
+                login();
                 router.push("/dashboard")
             }
         } catch (error) {
