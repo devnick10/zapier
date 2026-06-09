@@ -1,5 +1,6 @@
 import { createStore } from "zustand/vanilla";
 type User = {
+  id: string
   name: string;
   email: string;
 };

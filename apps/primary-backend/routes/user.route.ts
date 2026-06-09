@@ -83,7 +83,7 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
         res.status(404).json({ message: "User not found!" })
         return;
     }
-    res.json({ message: "User fetched", user: { email: user?.email, name: user.name } })
+    res.json({ message: "User fetched", user: { id: user.id, email: user?.email, name: user.name } })
 })
 
 
