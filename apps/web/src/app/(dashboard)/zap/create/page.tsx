@@ -1,7 +1,5 @@
-
-import ZapCreate from '@/components/pages/zap-create'
+import ZapCreate from "@/components/pages/zap-create";
 
 export default function page() {
-  return <ZapCreate />
+  return <ZapCreate />;
 }
-

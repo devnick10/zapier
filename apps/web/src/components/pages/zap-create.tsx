@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const FlowComponent = dynamic(() => import('@/components/flow/flow'), {
-    ssr: false,
+const FlowComponent = dynamic(() => import("@/components/flow/flow"), {
+  ssr: false,
 });
 
 export default function ZapCreate() {
-    return <FlowComponent />;
+  return <FlowComponent />;
 }

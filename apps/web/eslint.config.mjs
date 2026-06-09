@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  "plugin:prettier/recommended",
 ]);
 
 export default eslintConfig;
