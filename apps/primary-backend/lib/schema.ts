@@ -20,5 +20,15 @@ export const ZapSchema = z.object({
     }))
 })
 
+export const UpdateZapSchema = z.object({
+    triggerId: z.string(),
+    availableTriggerId: z.string(),
+    triggerMetadata: z.any().optional(),
+    actions: z.array(z.object({
+        availableActionId: z.string(),
+        actionMetadata: z.any().optional()
+    }))
+})
+
 export const ZapIdSchema = z.string()
 
