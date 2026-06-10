@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 export const useZap = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [zaps, setZaps] = useState<Zap[]>([]);
-
   useEffect(() => {
     async function getZaps() {
       try {

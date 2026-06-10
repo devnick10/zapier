@@ -1,5 +1,6 @@
 "use client";
 import { Navbar } from "@/components/navbar";
+import { PageLoader } from "@/components/page-loader";
 import { api } from "@/lib/axios";
 import { useUserStore } from "@/stores/store-provider";
 import { useRouter } from "next/navigation";
@@ -10,7 +11,7 @@ export default function PublicRoutes({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { setUser, login } = useUserStore((state) => state);
+  const { setUser, login, isAuthenticated } = useUserStore((state) => state);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +23,10 @@ export default function PublicRoutes({
       }
     });
   }, [router, setUser, login]);
+
+  if (isAuthenticated) {
+    return <PageLoader />;
+  }
 
   return (
     <>

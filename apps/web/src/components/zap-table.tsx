@@ -17,7 +17,7 @@ import { toast } from "sonner";
 
 export const ZapTable: React.FC = () => {
   const { loading, zaps } = useZap();
-  const { user } = useUserStore(state => state)
+  const { user } = useUserStore((state) => state);
   return (
     <>
       <div className="py-4">
@@ -33,26 +33,30 @@ export const ZapTable: React.FC = () => {
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">ID</TableHead>
               <TableHead className="font-semibold">Webhook URL</TableHead>
-              <TableHead className="text-right font-semibold pr-6">Go</TableHead>
+              <TableHead className="text-right font-semibold pr-6">
+                Go
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="">
             {zaps.map((z) => (
-              <TableRow
-                key={z.id}
-                className=""
-              >
-
-                <TableCell className="font-medium ">
+              <TableRow key={z.id} className="">
+                <TableCell className="font-medium flex gap-1">
+                  <img
+                    src={z.trigger.type.image}
+                    className="w-8 h-8 object-contain"
+                  />
                   {z.action.map((a) => (
                     <div key={a.id} className="flex gap-2 ">
-                      <img src={z.trigger.type.image} className="w-8 h-8 object-contain" />
-                      <img src={a.type.image} className="w-8 h-8 object-contain" />
+                      <img
+                        src={a.type.image}
+                        className="w-8 h-8 object-contain"
+                      />
                     </div>
                   ))}
                 </TableCell>
                 <TableCell>{z.id}</TableCell>
-                <TableCell className="max-w-xs truncate" >
+                <TableCell className="max-w-xs truncate">
                   <div className="flex items-center gap-2">
                     <span className="max-w-75 truncate">
                       {`${HOOKS_URL}/catch/${user?.id}/${z.id}`}
@@ -62,9 +66,9 @@ export const ZapTable: React.FC = () => {
                       size="sm"
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `${HOOKS_URL}/catch/${user?.id}/${z.id}`
-                        )
-                        toast.success("Webhook URL copied")
+                          `${HOOKS_URL}/catch/${user?.id}/${z.id}`,
+                        );
+                        toast.success("Webhook URL copied");
                       }}
                     >
                       Copy
@@ -73,7 +77,7 @@ export const ZapTable: React.FC = () => {
                 </TableCell>
                 <TableCell className="text-right">
                   <Link href={`/zap/${z.id}`}>
-                    <Button className="" variant={"purple"} >
+                    <Button className="" variant={"purple"}>
                       Go
                     </Button>
                   </Link>

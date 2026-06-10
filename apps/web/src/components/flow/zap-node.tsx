@@ -1,20 +1,18 @@
 "use client";
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
 
-type ZapNode = Node<
-  {
-    onClick?: () => void;
-    addNode?: () => void;
-    index: number;
-    type: "trigger" | "action";
-    label: string;
-    name?: string;
-    image?: string;
-  },
-  "trigger" | "action"
->;
+type ZapNodeData = {
+  onClick?: () => void;
+  index: number;
+  label: string;
+  name?: string;
+  image?: string;
+  availableActionId?: string;
+  availableTriggerId?: string;
+};
+export type ZapNodeType = Node<ZapNodeData, "trigger" | "action">;
 
-export function ZapNode({ data }: NodeProps<ZapNode>) {
+export function ZapNode({ data }: NodeProps<ZapNodeType>) {
   return (
     <>
       <Handle type="target" position={Position.Top} />

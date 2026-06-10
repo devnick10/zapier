@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Spinner } from "./ui/sipinner";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type PublishBUttonProps = CreateZapPayload;
 
@@ -14,7 +15,7 @@ export const PublishButton: React.FC<PublishBUttonProps> = ({
   triggerMetadata,
 }) => {
   const { loading, publish, success } = usePublishZap();
-
+  const router = useRouter();
   useEffect(() => {
     if (success === false) {
       toast.error("Failed to publish zap retry!");
@@ -33,6 +34,7 @@ export const PublishButton: React.FC<PublishBUttonProps> = ({
             triggerMetadata,
             actions,
           });
+          router.push("/dashboard");
         }}
       >
         Publish {loading && <Spinner className="size-5" />}

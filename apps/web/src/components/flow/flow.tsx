@@ -1,31 +1,22 @@
 "use client";
 
-import { TriggerType } from "@/lib/types";
+import { ActionType, TriggerType } from "@/lib/types";
 import {
   addEdge,
-  Background,
   Connection,
-  Controls,
-  MiniMap,
-  ReactFlow,
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
 import { useCallback, useState } from "react";
 
-import { useAvailableActionsAndTriggers } from "@/hooks/use-actions-and-triggers";
+import { DEFAULT_IMAGE } from "@/lib/config";
 import "@xyflow/react/dist/style.css";
-import { Model } from "../model";
+import { ZapNodeSelector } from "../ZapNodeSelector";
 import { PublishButton } from "../publish-button";
-import { ZapNode } from "./zap-node";
-const DEFAULT_IMAGE =
-  "https://img.icons8.com/?size=80&id=12f0cgsMnoZM&format=png";
-const nodeTypes = {
-  trigger: ZapNode,
-  action: ZapNode,
-};
+import { ZapCanvas } from "./zap-canvas";
+import { ZapNodeType } from "./zap-node";
 
-const initialNodes = [
+const initialNodes: ZapNodeType[] = [
   {
     id: "1",
     type: "trigger",
@@ -47,11 +38,9 @@ const initialEdges: { id: string; source: string; target: string }[] = [];
 export default function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(
+  const [selectedNodeIndex, setSelectedNodeIndex] = useState<number | null>(
     null,
   );
-  const { availabelTriggers, availableActions } =
-    useAvailableActionsAndTriggers();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const [trigger, setTrigger] = useState<TriggerType | null>(null);
@@ -72,7 +61,7 @@ export default function Flow() {
       const newNodeId = `${Date.now()}`;
       const parent = nodes.find((n) => n.id === parentId);
 
-      const newNode = {
+      const newNode: ZapNodeType = {
         id: newNodeId,
         type: "action",
         position: {
@@ -81,7 +70,6 @@ export default function Flow() {
         },
         data: {
           label: "Action",
-          type: "action",
           index: nodes.length + 1,
           name: "",
           image: DEFAULT_IMAGE,
@@ -107,10 +95,56 @@ export default function Flow() {
       ...node.data,
       onClick: () => {
         setSelectedNodeId(node.id);
-        setSelectedModelIndex(node.data.index);
+        setSelectedNodeIndex(node.data.index);
       },
     },
   }));
+
+  const handleSelect = (item: ActionType | TriggerType | null): void => {
+    if (!item) {
+      setSelectedNodeIndex(null);
+      return;
+    }
+
+    if (selectedNodeIndex === 1) {
+      setTrigger(item);
+    } else {
+      setActions((prev) => [
+        ...prev,
+        {
+          availableActionId: item.id,
+          actionMetadata: {},
+        },
+      ]);
+    }
+
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === selectedNodeId
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                label: item.name,
+                name: item.name,
+                image: item.image,
+                availableId: item.id,
+              },
+            }
+          : node,
+      ),
+    );
+
+    // Add next action node
+    const selectedNode = nodes.find((n) => n.id === selectedNodeId);
+    const isLastNode = nodes[nodes.length - 1]?.id === selectedNode?.id;
+
+    if (isLastNode) {
+      addNode(selectedNode.id);
+    }
+
+    setSelectedNodeIndex(null);
+  };
 
   return (
     <div
@@ -122,72 +156,16 @@ export default function Flow() {
         triggerId={trigger?.id!}
         triggerMetadata={{}}
       />
-      {selectedModelIndex !== null && (
-        <Model
-          items={
-            selectedModelIndex === 1 ? availabelTriggers : availableActions
-          }
-          index={selectedModelIndex}
-          onSelect={(item) => {
-            if (!item) {
-              setSelectedModelIndex(null);
-              return;
-            }
-
-            if (selectedModelIndex === 1) {
-              setTrigger(item);
-            } else {
-              setActions((prev) => [
-                ...prev,
-                {
-                  availableActionId: item.id,
-                  actionMetadata: {},
-                },
-              ]);
-            }
-
-            setNodes((nds) =>
-              nds.map((node) =>
-                node.id === selectedNodeId
-                  ? {
-                      ...node,
-                      data: {
-                        ...node.data,
-                        label: item.name,
-                        name: item.name,
-                        image: item.image,
-                        availableId: item.id,
-                      },
-                    }
-                  : node,
-              ),
-            );
-
-            // Add next action node
-            const selectedNode = nodes.find((n) => n.id === selectedNodeId);
-            const isLastNode = nodes[nodes.length - 1]?.id === selectedNode?.id;
-
-            if (isLastNode) {
-              addNode(selectedNode.id);
-            }
-
-            setSelectedModelIndex(null);
-          }}
-        />
+      {selectedNodeIndex !== null && (
+        <ZapNodeSelector index={selectedNodeIndex} onSelect={handleSelect} />
       )}
-      <ReactFlow
-        fitView
-        nodeTypes={nodeTypes}
-        nodes={nodesWithCallbacks}
+      <ZapCanvas
         edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        nodes={nodesWithCallbacks}
         onConnect={onConnect}
-      >
-        <Controls className="text-black" />
-        <MiniMap className="" />
-        <Background gap={12} size={1} />
-      </ReactFlow>
+        onEdgesChange={onEdgesChange}
+        onNodesChange={onNodesChange}
+      />
     </div>
   );
 }

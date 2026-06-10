@@ -1,17 +1,18 @@
 "use client";
 import { api } from "@/lib/axios";
-import { CreateZapPayload } from "@/lib/types";
+import { UpdateZapPayload, Zap } from "@/lib/types";
 import { useState } from "react";
 
-export const usePublishZap = () => {
+export const useUpdateZap = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<boolean | null>(null);
 
-  const publish = async (data: CreateZapPayload) => {
+  const updateZap = async (data: UpdateZapPayload) => {
+    console.log(data);
     try {
       setLoading(true);
-      const result = await api.post("/zap", data);
-      if (result.status === 201) {
+      const result = await api.put(`/zap/${data.id}`, data);
+      if (result.status === 200) {
         setSuccess(true);
       }
     } catch (error) {
@@ -21,5 +22,5 @@ export const usePublishZap = () => {
     }
   };
 
-  return { loading, publish, success };
+  return { loading, updateZap, success };
 };

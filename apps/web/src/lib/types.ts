@@ -48,3 +48,14 @@ export type CreateZapPayload = {
     actionMetadata: Record<string, any>;
   }[];
 };
+
+export type UpdateZapPayload = {
+  id: string;
+  triggerId: string;
+  availableTriggerId: string;
+  triggerMetadata?: Record<string, any>;
+  actions: {
+    availableActionId: string;
+    actionMetadata?: Record<string, any>;
+  }[];
+};

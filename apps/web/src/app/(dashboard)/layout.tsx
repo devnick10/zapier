@@ -1,6 +1,6 @@
 "use client";
 import { Navbar } from "@/components/navbar";
-import { Spinner } from "@/components/ui/sipinner";
+import { PageLoader } from "@/components/page-loader";
 import { api } from "@/lib/axios";
 import { useUserStore } from "@/stores/store-provider";
 import { useRouter } from "next/navigation";
@@ -29,12 +29,7 @@ export default function DashboardLayout({
   }, [router, setUser, login]);
 
   if (!isAuthenticated) {
-    return (
-      <div className=" w-full max-w-full h-screen flex items-center justify-center gap-2 text-xl mt-6">
-        {" "}
-        <span>Loading</span> <Spinner className="size-6" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (
