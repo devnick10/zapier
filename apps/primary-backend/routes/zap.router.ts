@@ -45,7 +45,8 @@ router.post("/", async (req: Request, res: Response) => {
             const trigger = await txn.trigger.create({
                 data: {
                     zapId: zap.id,
-                    availableTriggerId: data.triggerId
+                    availableTriggerId: data.triggerId,
+                    metadata: data.triggerMetadata
                 }
             })
             await txn.zap.update({ where: { id: zap.id }, data: { triggerId: trigger.id } })
@@ -53,6 +54,7 @@ router.post("/", async (req: Request, res: Response) => {
                 data: data.actions.map((a, i) => ({
                     zapId: zap.id,
                     availableActionId: a.availableActionId,
+                    metadata: a.actionMetadata,
                     sortingOrder: i
                 }))
             })
@@ -97,6 +99,7 @@ router.put("/:zapId", async (req: Request, res: Response) => {
                 },
                 data: {
                     availableTriggerId: data.availableTriggerId,
+                    metadata: data.triggerMetadata
                 },
             });
 
@@ -110,6 +113,7 @@ router.put("/:zapId", async (req: Request, res: Response) => {
                 data: data.actions.map((action, index) => ({
                     zapId,
                     availableActionId: action.availableActionId,
+                    metadata: action.actionMetadata,
                     sortingOrder: index,
                 })),
             });

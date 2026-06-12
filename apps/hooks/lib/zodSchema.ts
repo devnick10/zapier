@@ -4,6 +4,4 @@ export const HookSchema = z.object({
     userId: z.string(),
     zapId: z.string()
 })
-export const HookBodySchema = z.object({
-    metadata: z.any().optional()
-});
+export const HookBodySchema = z.record(z.any(), z.any()).optional()

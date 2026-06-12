@@ -21,7 +21,6 @@ export const PublishButton: React.FC<PublishBUttonProps> = ({
       toast.error("Failed to publish zap retry!");
     }
   }, [success]);
-
   return (
     <div className="absolute top-10 right-10 z-30 ">
       <Button

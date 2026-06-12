@@ -30,6 +30,7 @@ model Trigger {
   id                 String           @id @default(uuid())
   zapId              String           @unique
   availableTriggerId String
+  metadata           Json             @default(dbgenerated())
   type               AvailableTrigger @relation(fields: [availableTriggerId], references: [id])
   zap                Zap              @relation(fields: [zapId], references: [id])
 }
@@ -38,6 +39,7 @@ model Action {
   id                String          @id @default(uuid())
   zapId             String
   availableActionId String
+  metadata          Json            @default(dbgenerated())
   zap               Zap             @relation(fields: [zapId], references: [id])
   type              AvailableAction @relation(fields: [availableActionId], references: [id])
   sortingOrder      Int             @default(0)
@@ -54,13 +56,13 @@ model AvailableAction {
   id     String   @id @default(uuid())
   name   String
   action Action[]
-  image  String 
+  image  String
 }
 
 model ZapRun {
   id             String        @id @default(uuid())
   zapId          String
-  metadata       Json
+  metadata       Json          @default(dbgenerated())
   zap            Zap           @relation(fields: [zapId], references: [id])
   createdAt      DateTime      @default(now())
   zapRunOutboxes ZapRunOutbox?

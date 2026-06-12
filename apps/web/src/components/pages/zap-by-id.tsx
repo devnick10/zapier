@@ -15,15 +15,15 @@ import { useZapById } from "@/hooks/use-zap-by-id";
 import { ZapNodeType } from "@/components/flow/zap-node";
 import { Button } from "@/components/ui/button";
 import { ZapNodeSelector } from "@/components/ZapNodeSelector";
+import { useUpdateZap } from "@/hooks/use-update-zap";
 import { DEFAULT_IMAGE } from "@/lib/config";
-import { ActionType, TriggerType } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { OnSelecProps } from "../flow/types";
 import { createActionNode, createTriggerNode } from "../flow/utils";
 import { ZapCanvas } from "../flow/zap-canvas";
 import { PageLoader } from "../page-loader";
-import { useUpdateZap } from "@/hooks/use-update-zap";
-import { toast } from "sonner";
 import { Spinner } from "../ui/sipinner";
-import { useRouter } from "next/navigation";
 
 const initialNodes: ZapNodeType[] = [];
 const initialEdges: { id: string; source: string; target: string }[] = [];
@@ -33,7 +33,6 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
   const { updateZap, loading: updateLoading } = useUpdateZap();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedNodeIndex, setSelectedNodeIndex] = useState<number | null>(
     null,
@@ -93,6 +92,9 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
           index: nodes.length + 1,
           name: "action",
           image: DEFAULT_IMAGE,
+          availableId: "",
+          metadata: {},
+          availableActionId: "",
         },
       };
 
@@ -120,7 +122,7 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
     },
   }));
 
-  const handleSelect = (item: ActionType | TriggerType | null) => {
+  const handleSelect = (item: OnSelecProps | null) => {
     if (!item) {
       setSelectedNodeId(null);
       setSelectedNodeIndex(null);
@@ -131,15 +133,16 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
       nds.map((node) =>
         node.id === selectedNodeId
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                label: item.name,
-                name: item.name,
-                image: item.image,
-                availableId: item.id,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              label: item.name,
+              name: item.name,
+              image: item.image,
+              availableId: item.id,
+              metadata: item?.metadata
+            },
+          }
           : node,
       ),
     );
@@ -151,8 +154,6 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
     if (isLastNode && selectedNode?.id) {
       addNode(selectedNode.id);
     }
-
-    setSelectedNodeId(null);
     setSelectedNodeIndex(null);
   };
 
@@ -175,14 +176,14 @@ export const ZapById: React.FC<{ id: string }> = ({ id }) => {
     const payload = {
       id,
       triggerId: zap.trigger.id,
+      triggerMetadata: triggerNode.data.metadata,
       availableTriggerId: triggerNode.data.availableTriggerId,
       actions: nodes
         .slice(1)
-        //@ts-expect-error
         .filter((node) => node.data.availableId)
         .map((node) => ({
-          //@ts-expect-error
           availableActionId: node.data.availableId as string,
+          actionMetadata: node.data.metadata
         })),
     };
 

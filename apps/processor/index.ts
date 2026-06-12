@@ -13,12 +13,12 @@ async function main() {
     await producer.connect()
     while (1) {
 
-        const pendingRows = await client.zapRunOutbox.findMany({take:10})
+        const pendingRows = await client.zapRunOutbox.findMany({ take: 10 })
 
         await producer.send({
             topic: Topic.TOPIC_NAME,
             messages: pendingRows.map(row => ({
-                value: row.zapRunId
+                value: JSON.stringify({ zapRunId: row.zapRunId, stage: 0 })
             }))
         })
 

@@ -5,32 +5,28 @@ import { HookBodySchema, HookSchema } from "../lib/zodSchema";
 const router = Router()
 
 router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
-    const params = HookSchema.safeParse(req.params)
-    const body = HookBodySchema.safeParse(req.body)
-
-    if (!params.success) {
+    const parsedParams = HookSchema.safeParse(req.params)
+    const parsedBody = HookBodySchema.safeParse(req.body)
+    if (!parsedParams.success) {
         res.status(411).json({
-            message: params.error
+            message: parsedParams.error
         })
         return
     }
-    if (req.body.metadata && !body.success) {
+    if (!parsedBody.success) {
         res.status(411).json({
-            message: body.error
+            message: parsedBody.error
         })
         return
     }
 
-    const { zapId } = params.data
-    // @ts-ignore
-    const { metadata } = body.data
+    const { zapId } = parsedParams.data;
+    const metadata = parsedBody.data;
 
-    // store in db a new triger 
     await client.$transaction(async (txn) => {
         const zapRun = await txn.zapRun.create({
             data: {
                 zapId,
-                //@ts-ignore
                 metadata
             }
         })
@@ -40,7 +36,7 @@ router.post("/hooks/catch/:userId/:zapId", async (req, res) => {
             }
         })
     })
-    // push to queue kafka/redis
+
     res.status(200).json({ message: "webhook recieved" })
 })
 

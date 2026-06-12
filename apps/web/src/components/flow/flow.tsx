@@ -15,6 +15,7 @@ import { ZapNodeSelector } from "../ZapNodeSelector";
 import { PublishButton } from "../publish-button";
 import { ZapCanvas } from "./zap-canvas";
 import { ZapNodeType } from "./zap-node";
+import { OnSelecProps } from "./types";
 
 const initialNodes: ZapNodeType[] = [
   {
@@ -43,7 +44,7 @@ export default function Flow() {
   );
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
-  const [trigger, setTrigger] = useState<TriggerType | null>(null);
+  const [trigger, setTrigger] = useState<{ id: string, metadata: Record<string, any> } | null>(null);
   const [actions, setActions] = useState<
     {
       availableActionId: string;
@@ -73,6 +74,8 @@ export default function Flow() {
           index: nodes.length + 1,
           name: "",
           image: DEFAULT_IMAGE,
+          availableId: "",
+          metadata: {}
         },
       };
 
@@ -100,20 +103,23 @@ export default function Flow() {
     },
   }));
 
-  const handleSelect = (item: ActionType | TriggerType | null): void => {
+  const handleSelect = (item: OnSelecProps | null): void => {
     if (!item) {
       setSelectedNodeIndex(null);
       return;
     }
 
     if (selectedNodeIndex === 1) {
-      setTrigger(item);
+      setTrigger({
+        id: item.id,
+        metadata: item?.metadata || {}
+      });
     } else {
       setActions((prev) => [
         ...prev,
         {
           availableActionId: item.id,
-          actionMetadata: {},
+          actionMetadata: item?.metadata || {},
         },
       ]);
     }
@@ -122,15 +128,16 @@ export default function Flow() {
       nds.map((node) =>
         node.id === selectedNodeId
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                label: item.name,
-                name: item.name,
-                image: item.image,
-                availableId: item.id,
-              },
-            }
+            ...node,
+            data: {
+              ...node.data,
+              label: item.name,
+              name: item.name,
+              image: item.image,
+              availableId: item.id,
+              metadata: item?.metadata
+            },
+          }
           : node,
       ),
     );
@@ -143,7 +150,7 @@ export default function Flow() {
       addNode(selectedNode.id);
     }
 
-    setSelectedNodeIndex(null);
+    setSelectedNodeIndex(null)
   };
 
   return (
@@ -154,7 +161,7 @@ export default function Flow() {
       <PublishButton
         actions={actions}
         triggerId={trigger?.id!}
-        triggerMetadata={{}}
+        triggerMetadata={trigger?.metadata || {}}
       />
       {selectedNodeIndex !== null && (
         <ZapNodeSelector index={selectedNodeIndex} onSelect={handleSelect} />

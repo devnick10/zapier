@@ -9,6 +9,8 @@ type ZapNodeData = {
   image?: string;
   availableActionId?: string;
   availableTriggerId?: string;
+  metadata?: Record<string, any>
+  availableId?: string
 };
 export type ZapNodeType = Node<ZapNodeData, "trigger" | "action">;
 

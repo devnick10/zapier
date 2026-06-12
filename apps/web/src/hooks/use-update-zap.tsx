@@ -1,6 +1,6 @@
 "use client";
 import { api } from "@/lib/axios";
-import { UpdateZapPayload, Zap } from "@/lib/types";
+import { UpdateZapPayload } from "@/lib/types";
 import { useState } from "react";
 
 export const useUpdateZap = () => {
@@ -8,7 +8,6 @@ export const useUpdateZap = () => {
   const [success, setSuccess] = useState<boolean | null>(null);
 
   const updateZap = async (data: UpdateZapPayload) => {
-    console.log(data);
     try {
       setLoading(true);
       const result = await api.put(`/zap/${data.id}`, data);
